@@ -31,7 +31,8 @@ def create_app(test_config=None):
   @app.route('/categories')
   def get_categories():
       categories = Category.query.all()
-      formatted_categories = [category.format() for category in categories]
+      formatted_categories = {}
+        formatted_categories[category.id] = category.type
 
       return jsonify({
         'success': True,
@@ -54,13 +55,22 @@ def create_app(test_config=None):
       page = request.args.get('page', 1, type=int)
       start = (page - 1) * QUESTIONS_PER_PAGE
       end = start + QUESTIONS_PER_PAGE
+      questions = Question.query.all()
       categories = Category.query.all()
-      formatted_categories = [category.format() for category in categories]
+      formatted_questions = [question.format() for question in questions]
+      formatted_categories = {}
+        formatted_categories[category.id] = category.type
+
+      if (len(formatted_questions[start:end]) > 0):
+          abort(404)
 
       return jsonify({
         'success': True,
+        'questions': formatted_questions[start:end],
+        'total_questions': len(formatted_questions),
         'categories': formatted_categories,
-        'total_categories': len(formatted_categories)
+        'current_category': None,
+        'page': page
       })
 
   '''
