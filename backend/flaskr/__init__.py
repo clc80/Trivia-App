@@ -87,15 +87,16 @@ def create_app(test_config=None):
   This removal will persist in the database and when you refresh the page.
   '''
   @app.route('/questions/<int:question_id>', methods=['DELETE'])
-  def delete_book(question_id):
+  def delete_question(question_id):
       try:
           question = Question.query.filter(Question.id == question_id).one_or_none()
 
           if question is None:
               abort(404)
-          question.delete()
-          selection = Question.query.order_by(Question.id).all()
-          current_questions = paginate_questions(request, selection)
+          else:
+              question.delete()
+              selection = Question.query.order_by(Question.id).all()
+              current_questions = paginate_questions(request, selection)
 
           return jsonify({
             'success': True,
@@ -182,5 +183,29 @@ def create_app(test_config=None):
   Create error handlers for all expected errors
   including 404 and 422.
   '''
+  @app.errorhandler(404)
+  def not_found(error):
+      return jsonify({
+          "success": False,
+          "error": 404,
+          "message": "Resource Not found"
+      }), 404
 
+  @app.errorhandler(400)
+  def bad_request(error):
+      return jsonify({
+          "success": False,
+          "error": 400,
+          "message": "Bad Request"
+      }), 400
+
+  @app.errorhandler(422)
+  def unprocessable_entity(error):
+      return jsonify({
+          "success": False,
+          "error": 422,
+          "message": "Unprocessable"
+      }), 422
+
+      
   return app
