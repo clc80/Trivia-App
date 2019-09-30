@@ -143,8 +143,6 @@ def create_app(test_config=None):
       except:
           abort(422)
 
-  return app
-
   '''
   @TODO:
   Create a POST endpoint to get questions based on a search term.
@@ -207,5 +205,5 @@ def create_app(test_config=None):
           "message": "Unprocessable"
       }), 422
 
-      
+
   return app
