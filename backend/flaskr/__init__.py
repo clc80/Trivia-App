@@ -8,6 +8,16 @@ from models import setup_db, Question, Category
 
 QUESTIONS_PER_PAGE = 10
 
+def paginate_questions(request, selection):
+    page = request.args.get('page', 1, type=int)
+    start = (page - 1) * QUESTIONS_PER_PAGE
+    end = start + QUESTIONS_PER_PAGE
+
+    questions = [question.format() for question in selection]
+    formatted_questions = questions[start:end]
+
+    return formatted_questions
+
 def create_app(test_config=None):
   # create and configure the app
   app = Flask(__name__)
@@ -21,7 +31,7 @@ def create_app(test_config=None):
   '''
   @app.after_request
   def after_request(response):
-      response.headers.add('Access-Control-Allow-Headers', 'Content-Type, Authorization')
+      response.headers.add('Access-Control-Allow-Headers', 'Content-Type, Authorization, true')
       response.headers.add('Access-Control-Allow-Methods', 'GET, POST, PATCH, DELETE, OPTIONS')
       return response
   '''
@@ -31,8 +41,7 @@ def create_app(test_config=None):
   @app.route('/categories')
   def get_categories():
       categories = Category.query.all()
-      formatted_categories = {}
-        formatted_categories[category.id] = category.type
+      formatted_categories = [category.format() for category in categories]
 
       return jsonify({
         'success': True,
@@ -52,25 +61,22 @@ def create_app(test_config=None):
   '''
   @app.route('/questions')
   def get_questions():
-      page = request.args.get('page', 1, type=int)
-      start = (page - 1) * QUESTIONS_PER_PAGE
-      end = start + QUESTIONS_PER_PAGE
       questions = Question.query.all()
       categories = Category.query.all()
-      formatted_questions = [question.format() for question in questions]
-      formatted_categories = {}
-        formatted_categories[category.id] = category.type
 
-      if (len(formatted_questions[start:end]) > 0):
+      formatted_questions = paginate_questions(request, questions)
+      formatted_categories = [category.format() for category in categories]
+      category_items = [(category.id, category.type) for category in categories]
+
+      if (len(formatted_questions) == 0):
           abort(404)
 
       return jsonify({
         'success': True,
-        'questions': formatted_questions[start:end],
-        'total_questions': len(formatted_questions),
+        'questions': formatted_questions,
+        'total_questions': len(questions),
         'categories': formatted_categories,
-        'current_category': None,
-        'page': page
+        'current_category': list(set([question['category'] for question in formatted_questions])),
       })
 
   '''
