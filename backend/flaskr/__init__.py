@@ -46,6 +46,7 @@ def create_app(test_config=None):
       return jsonify({
         'success': True,
         'categories': formatted_categories,
+        'total_categories': len(formatted_categories)
       })
   '''
   @TODO:
@@ -253,7 +254,7 @@ def create_app(test_config=None):
       return jsonify({
           "success": False,
           "error": 404,
-          "message": "Resource Not found"
+          "message": "Resource Not Found"
       }), 404
 
   @app.errorhandler(400)
