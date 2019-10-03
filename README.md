@@ -36,9 +36,9 @@ We recommend following the instructions in those files in order. This order will
 * Install dependencies with pip: ```pip install -r requirements.txt```
 * Run the development server:
   ```
-  $ export FLASK_APP=myapp
+  $ export FLASK_APP=flaskr
   $ export FLASK_ENV=development # enables debug mode
-  $ python3 app.py
+  $ flask run
   ```
 * Navigate to Home page [http://localhost:3000](http://localhost:3000)
 ### Backend

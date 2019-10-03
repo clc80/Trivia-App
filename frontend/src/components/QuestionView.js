@@ -38,7 +38,6 @@ class QuestionView extends Component {
         return;
       }
     })
-    console.log(this.state.categories)
   }
 
   selectPage(num) {
@@ -126,10 +125,10 @@ class QuestionView extends Component {
         <div className="categories-list">
           <h2 onClick={() => {this.getQuestions()}}>Categories</h2>
           <ul>
-            {Object.keys(this.state.categories).map((id, ) => (
-              <li key={id} onClick={() => {this.getByCategory(id)}}>
-                {this.state.categories[id]}
-                <img className="category" src={`${this.state.categories[id]}.svg`}/>
+            {Object.keys(this.state.categories).map((id) =>(
+              <li key={id} onClick={() => {this.getByCategory(this.state.categories[id].id)}}>
+                {console.log(this.state.categories[id].id)}
+                {this.state.categories[id].type}
               </li>
             ))}
           </ul>
