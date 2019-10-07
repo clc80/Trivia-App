@@ -116,7 +116,7 @@ def create_app(test_config=None):
               'total_questions': len(Question.query.all())
             })
 
-        except:
+        except Exception:
             abort(422)
     '''
     @TODO:
@@ -153,7 +153,7 @@ def create_app(test_config=None):
               'total_questions': len(Question.query.all())
             })
 
-        except:
+        except Exception:
             abort(422)
 
     '''
@@ -201,8 +201,7 @@ def create_app(test_config=None):
     @app.route('/categories/<int:category_id>/questions')
     def questions_by_category(category_id):
         try:
-            category = Category.query.filter_by(id=category_id).first()
-            questions = Question.query.filter_by(category=1).all()
+            questions = Question.query.filter_by(category = str(category_id)).all()
             current_questions = paginate_questions(request, questions)
 
             if len(current_questions) == 0:
@@ -214,7 +213,7 @@ def create_app(test_config=None):
               'total_questions': len(questions)
             })
 
-        except:
+        except Exception:
             abort(422)
 
     '''
@@ -239,7 +238,7 @@ def create_app(test_config=None):
         if quiz_category['type'] == "click":
             questions = Question.query.all()
         else:
-            questions = Question.query.filter_by(category=quiz_category['id']).all()
+            questions = Question.query.filter_by( category=quiz_category['id']).all()
 
         formatted_questions = [question.format() for question in questions]
 
