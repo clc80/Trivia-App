@@ -113,8 +113,8 @@ class TriviaTestCase(unittest.TestCase):
         res = self.client().get('/categories/1/questions')
         data = json.loads(res.data)
 
-        self.assertEqual(res.status_code, 422)
-        self.assertEqual(data['success'], False)
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(data['success'], True)
 
     def test_question_by_category_error(self):
         res = self.client().get('/categories/1000/questions')

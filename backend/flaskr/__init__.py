@@ -201,7 +201,7 @@ def create_app(test_config=None):
     @app.route('/categories/<int:category_id>/questions')
     def questions_by_category(category_id):
         try:
-            questions = Question.query.filter_by(category = str(category_id)).all()
+            questions = Question.query.filter_by(category=str(category_id)).all()
             current_questions = paginate_questions(request, questions)
 
             if len(current_questions) == 0:
@@ -238,7 +238,7 @@ def create_app(test_config=None):
         if quiz_category['type'] == "click":
             questions = Question.query.all()
         else:
-            questions = Question.query.filter_by( category=quiz_category['id']).all()
+            questions = Question.query.filter_by(category=quiz_category['id']).all()
 
         formatted_questions = [question.format() for question in questions]
 
